@@ -8,6 +8,7 @@ class SessionsController < ApplicationController
   end
 
   def new
+    @webauthn_params = RodauthMain.webauthn_login_params
   end
 
   def create

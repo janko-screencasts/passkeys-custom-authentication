@@ -12,6 +12,34 @@
   <%= link_to "Change email address", edit_identity_email_path %>
 </div>
 
+<h2>Passkeys</h2>
+
+<ul>
+  <% Current.user.webauthn_credentials.each do |webauthn_credential| %>
+    <li>
+      <%= webauthn_credential.nickname %>
+      <%= form_with url: webauthn_remove_path, method: :post, class: "d-inline" do |f| %>
+        <%= f.hidden_field :webauthn_id, value: webauthn_credential.webauthn_id %>
+        <%= f.submit "Delete", class: "btn btn-danger" %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<%= form_with url: webauthn_setup_path, method: :post, class: "row", data: { controller: "webauthn", webauthn_data_value: @webauthn_params[:webauthn_setup].to_json } do |f| %>
+  <%= f.hidden_field :webauthn_setup, data: { webauthn_target: "result" } %>
+  <%= f.hidden_field :webauthn_setup_challenge, value: @webauthn_params[:webauthn_setup_challenge] %>
+  <%= f.hidden_field :webauthn_setup_challenge_hmac, value: @webauthn_params[:webauthn_setup_challenge_hmac] %>
+
+  <div class="col-3">
+    <%= f.text_field :nickname, placeholder: "e.g. iCloud Keychain", class: "form-control" %>
+  </div>
+
+  <div class="col-2">
+    <%= f.submit "Create Passkey", class: "btn btn-primary", data: { action: "webauthn#setup:prevent" } %>
+  </div>
+<% end %>
+
 <h2>Access history</h2>
 
 <div>

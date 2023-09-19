@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_19_085020) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_19_093739) do
   create_table "email_verification_tokens", force: :cascade do |t|
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_email_verification_tokens_on_user_id"
@@ -39,7 +39,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_19_085020) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "webauthn_credentials", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "webauthn_id"
+    t.string "public_key", null: false
+    t.integer "sign_count", null: false
+    t.datetime "last_use", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "nickname"
+    t.index ["user_id", "webauthn_id"], name: "index_webauthn_credentials_on_user_id_and_webauthn_id", unique: true
+    t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
+  end
+
+  create_table "webauthn_users", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "webauthn_id", null: false
+    t.index ["user_id"], name: "index_webauthn_users_on_user_id"
+  end
+
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "webauthn_credentials", "users"
+  add_foreign_key "webauthn_users", "users"
 end

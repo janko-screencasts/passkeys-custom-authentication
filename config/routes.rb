@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  post 'webauthn/setup'
+  post 'webauthn/login'
+  post 'webauthn/remove'
   get  "sign_in", to: "sessions#new"
   post "sign_in", to: "sessions#create"
   get  "sign_up", to: "registrations#new"

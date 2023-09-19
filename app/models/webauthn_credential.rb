@@ -1,0 +1,2 @@
+class WebauthnCredential < ApplicationRecord
+end

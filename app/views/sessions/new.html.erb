@@ -21,6 +21,13 @@
 
 <br>
 
+<%= form_with url: webauthn_login_path, method: :post, data: { controller: "webauthn", webauthn_data_value: @webauthn_params[:webauthn_auth].to_json } do |f| %>
+  <%= f.hidden_field :webauthn_auth, data: { webauthn_target: "result" } %>
+  <%= f.hidden_field :webauthn_auth_challenge, value: @webauthn_params[:webauthn_auth_challenge] %>
+  <%= f.hidden_field :webauthn_auth_challenge_hmac, value: @webauthn_params[:webauthn_auth_challenge_hmac] %>
+
+  <%= f.submit "Sign in with a passkey", class: "btn btn-primary", data: { action: "webauthn#auth:prevent" } %>
+<% end %>
 
 <br>
 
